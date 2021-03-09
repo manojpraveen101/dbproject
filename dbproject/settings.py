@@ -83,6 +83,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 
@@ -107,14 +108,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dbproject.wsgi.application'
 
-REST_FRAMEWORK = {
+#basic authentication
+
+BASICAUTH_USERNAME = 'manoj'
+BASICAUTH_PASSWORD = 'manoj'
+
+# from token authentication
+'''REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES':(
          'rest_framework.permissions.IsAuthenticated',
     )
-}
+}'''
 
 
 # Database

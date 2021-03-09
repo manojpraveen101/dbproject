@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Employee
+from api.models import Employee,Companyinfo
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -9,4 +9,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
                   'firstname',
                   'lastname','company')
 
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Companyinfo
+        fields = ('id',
+                  'companyname',
+                  'description')
 

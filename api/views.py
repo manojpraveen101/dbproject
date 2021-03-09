@@ -6,7 +6,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from api.models import Employee,Companyinfo
-from api.serializers import EmployeeSerializer
+from api.serializers import EmployeeSerializer, CompanySerializer
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +71,56 @@ def employee_list(request):
             return JsonResponse({"message":"updated successful"})
         else:
             return JsonResponse({"message":"update failed"})
+
+
+@api_view(['GET', 'POST', 'DELETE', 'PUT'])
+def company_list(request):
+    if request.method == 'GET':
+        logger.debug("inside get method")
+        company = Companyinfo.objects.all()
+        companyname = request.GET.get('companyname',None)
+        if companyname is not None:
+            company = Companyinfo.objects.filter(companyname=companyname)
+            if company:
+                company = company[0]
+                employee = Employee.objects.filter(company=company).count()
+                return HttpResponse(employee)
+            else:
+                return JsonResponse({"Message":"companyname invalid"})
+
+        company_serializer = CompanySerializer(company, many=True)
+        return JsonResponse(company_serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        logger.debug("inside post method")
+        company_data = JSONParser().parse(request)
+        company_serializer = CompanySerializer(data=company_data)
+        if company_serializer.is_valid():
+            company_serializer.save()
+            return JsonResponse({"message": "valid"})
+        else:
+            return JsonResponse({"message": "not valid"})
+
+    elif request.method == 'DELETE':
+        logger.debug("inside delete method")
+        companyname = request.GET.get('companyname', None)
+        company = Companyinfo.objects.filter(companyname=companyname)
+        if companyname is not None:
+            company.delete()
+            return JsonResponse({"message": "deleted successfully"})
+        else:
+            return JsonResponse({"message": "deletion not successful"})
+
+    elif request.method == 'PUT':
+        logger.debug("inside put method")
+        company_data = JSONParser().parse(request)
+        companyname = company_data.get("companyname")
+        if companyname is not None:
+            company = Companyinfo.objects.filter(companyname=companyname)
+            company.update(**company_data)
+            return JsonResponse({"message": "updated successful"})
+        else:
+            return JsonResponse({"message": "update failed"})
 
 #    try:
 #        employee = TEmployee.objects.get(id=10)

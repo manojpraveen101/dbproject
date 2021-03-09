@@ -7,6 +7,6 @@ urlpatterns = [
     url(r'^api/employee$', views.employee_list),
     url(r'^api/company$',views.company_list),
     path(r'scookie', views.setcookie),
-    path(r'gcookie', views.getcookie)
+    path(r'gcookie', views.getcookie),
 
 ]

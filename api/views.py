@@ -3,10 +3,14 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist, EmptyResultSet
 from django.http.response import JsonResponse, HttpResponse
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser
 from api.models import Employee,Companyinfo
 from api.serializers import EmployeeSerializer, CompanySerializer
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +24,8 @@ def getcookie(request):
 
 
 @api_view(['GET', 'POST', 'DELETE', 'PUT'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
 def employee_list(request):
     if request.method == 'GET':
         print(request)
